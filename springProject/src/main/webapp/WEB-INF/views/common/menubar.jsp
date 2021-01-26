@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 <!-- 부트스트랩에서 제공하고 있는 스크립트 -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-<!-- JavaScript alertify -->
+
+<!-- JavaScript alertify 알터창-->
 <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 <!-- CSS -->
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
@@ -173,9 +174,9 @@ div {
 					<!-- Modal Body -->
 					<div class="modal-body">
 						<label for="userId" class="mr-sm-2">ID :</label> 
-						<input type="text" class="form-control mb-2 mr-sm-2" placeholder="Enter ID" id="userId" name="Id"> <br> 
+						<input type="text" class="form-control mb-2 mr-sm-2" placeholder="Enter ID" id="userId" name="userId"> <br> 
 						<label for="userPwd" class="mr-sm-2">Password:</label> 
-						<input type="password" class="form-control mb-2 mr-sm-2" placeholder="Enter password" id="userPwd" name="Pwd">
+						<input type="password" class="form-control mb-2 mr-sm-2" placeholder="Enter password" id="userPwd" name="userPwd">
 					</div>
 
 					<!-- Modal footer -->
