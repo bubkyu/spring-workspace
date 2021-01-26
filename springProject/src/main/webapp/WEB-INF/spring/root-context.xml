@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	<!-- 
+		* root-context.xml
+		서버 스타트와 동시에 web.xml을 거쳐 바로 로딩되는 설정파일.
+		서버 구동과 동시에 바로 셋팅 해야되는 (빈으로 등록) 내용들을 작성하는 설정파일
+		주로 DB연결 설정, 내외부 모듈 연동 등등
+		
+	 -->
+	 <!-- 1. 데이터 소스 등록 먼저 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
+		<property name="username" value="spring" />	<!-- DB 접속아이디 -->
+		<property name="password" value="spring" />	<!-- DB 접속비밀번호 -->
+	</bean>
+	
+	<!--<bean> 안에 있는 것이 내부적으로 생성됨. 
+		BasicDataSource dataSource = new BasicDataSource();
+		dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+		dataSource.setUrl("jdbc:oracle:thin:@localhost:1521:xe");
+		dataSource.setUserName("spring");
+		dataSource.setPassword("spring");
+	 -->
+	 
+	 <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	 <!-- 이전에 작성해놨던  mybatis-config.xml 문서 불러들이기-->
+	 	<property name="configLocation" value="classpath:mybatis-config.xml"/>
+	 	<property name="dataSource" ref="dataSource"/>
+	 </bean>
+	 <!-- 
+	 	SqlSessionFactorryBean sqlSessionFactory = new SqlSessionFactoryBean();
+	 	sqlSessionFactory.setConfigLocation("classpath:mybatis-config.xml");
+	 	sqlSessionFactory.setDataSource(dataSource);
+	  -->
+	  
+	  <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+	  	<constructor-arg ref="sqlSessionFactory" />
+	  </bean>
+	  <!-- SqlSessionTemplate sqlSession = new SqlSessionTemplate(sqlSessionFactory); -->
+	
+		<!-- 
+			*bean 으로 객체 등록 시
+			property 태그를 통해 한다면 -> setter 주입
+			constructor-arg 태그를 통해 한다면 -> 생성자 주입
+		 -->
+
+	
+		
+</beans>

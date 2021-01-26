@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL" />
+	</settings>
+	
+	<typeAliases>
+		<typeAlias type="com.kh.spring.member.model.vo.Member" alias="Member"/>
+		<typeAlias type="com.kh.spring.board.model.vo.Board" alias="Board"/>
+		<typeAlias type="com.kh.spring.board.model.vo.Reply" alias="Reply"/>
+		
+	</typeAliases>
+	
+	
+	<!--  
+		기존에는 DB연결 설정에 대한 정보를 mybatis-config 작성했다면
+		스프링에서는 서벗 스타트와 동시에 제일 먼저 읽는 문서인 root-context.xml 에서 기술할꺼임.
+		DataSource 관련해서 DB 등록은 서버 연동과 같이 이뤄져야되기 때문에 
+		
+		<environments default="development">
+			<environment id="development">
+				<dataSource>
+					<property name="" value=""/>
+				</dataSource>
+			</environment>
+		</environments>
+ 	-->
+ 	
+ 	<mappers>
+ 		<mapper	resource="mappers/member-mapper.xml" />
+ 		<mapper resource="mappers/board-mapper.xml" />
+ 	
+ 	</mappers>
+ 	
+ 	
+</configuration>
