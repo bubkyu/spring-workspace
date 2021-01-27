@@ -186,7 +186,30 @@
 		    <version>1.4</version>
 		</dependency>
 		
+		<!-- *추가 적인 유용한 라이브러리(lombok) -->
+		<dependency>
+		    <groupId>org.projectlombok</groupId>
+		    <artifactId>lombok</artifactId>
+		    <version>1.18.12</version>
+		    <scope>provided</scope>
+		</dependency>
 		
+		<!-- 2. 스프링 스큐리티 모듈 추가하는 라이브러리(core, web, config -->
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-core</artifactId>
+		    <version>5.2.0.RELEASE</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-web</artifactId>
+		    <version>5.2.0.RELEASE</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-config</artifactId>
+		    <version>5.2.0.RELEASE</version>
+		</dependency>
 		
 		
 		      

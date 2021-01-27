@@ -19,6 +19,7 @@
  	<select id="loginMember"
  				 parameterType="Member" 
  				 resultMap="memberResultSet">
+	 	<!-- 암호화 전
 	 	select
 	        user_id
 	      , user_pwd
@@ -35,8 +36,70 @@
 		    where status='Y'
 		     and user_id=#{userId}
 		     and user_pwd=#{userPwd}
- 	
+ 	 	-->
+ 	 	<!-- 암호화 후 -->
+ 	 	select
+	        user_id
+	      , user_pwd
+	      , user_name
+	      , email
+	      , gender
+	      , age
+	      , phone
+	      , address
+	      , enroll_date
+	      , modify_date
+	      , status
+		    from member
+		    where status='Y'
+		     and user_id=#{userId}
+		     
  	</select>
+ 	
+ 	<insert id="insertMember" parameterType="Member">
+ 	
+		 	insert
+		    into member
+		    (
+		      user_id
+		    , user_pwd
+		    , user_name
+		    , email
+		    , gender
+		    , age
+		    , phone
+		    , address   
+		    )
+		    values
+		    (
+		      #{userId}
+		    , #{userPwd}
+		    , #{userName}
+		    , #{email}
+		    , #{gender}
+		    , #{age}
+		    , #{phone}
+		    , #{address}
+		    )
+ 	</insert>
+ 	
+ 	<update id="updateMember" parameterType="Member">
+	 		update
+	       		 member
+		    set email = #{email}
+		    ,   gender = #{gender}
+		    ,   age = #{age}
+		    ,   phone = #{phone}
+		    ,   address = #{address}
+		    ,   midify_date = sysdate
+		where user_id = #{userId}
+ 	</update>
  	
  	
 </mapper>
+
+
+
+
+
+

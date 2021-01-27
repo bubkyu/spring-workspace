@@ -8,7 +8,7 @@ public interface MemberService {
 	Member loginMember(Member m);
 	
 	// 2. 회원가입용 서비스
-	int insertMember(Member m);
+	int insertMember(Member m); 
 	
 	// 3. 회원정보 변경용 서비스
 	int updateMember(Member m);

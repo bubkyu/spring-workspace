@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,6 +25,13 @@ public class MemberController {
 	
 	@Autowired
 	private MemberService mService;
+	
+	@Autowired
+	private BCryptPasswordEncoder bcryptPasswordEncoder;
+	
+	
+	
+	
 	
 	// * 파라미터(요청시 전달값)를 전송하는 방법 == 요청시 전달되는 값들 처리방법
 	/*
@@ -191,7 +199,9 @@ public class MemberController {
 	 *  
 	 *  ModelAndView는 이 두가지를 합쳐놓은 객체 == 응답데이터도 담을수 있고, 응답할 뷰 페이지도 담을 수 있다.
 	 */
+	
 	//로그인
+	/* 암호화 처리 전 로그인 처리
 	@RequestMapping("login.me")
 	public ModelAndView loginMember(Member m, HttpSession session, ModelAndView mv) {
 		Member loginUser = mService.loginMember(m);
@@ -207,6 +217,28 @@ public class MemberController {
 		
 		return mv;
 	}
+	*/
+	// 암호화 처리 후 로그인 처리
+	@RequestMapping("login.me")
+	public String loginMember(Member m, HttpSession session, Model model) {
+		// m -> 로그인 요청 시 입력했던 아이디, 비밀번호(평문)
+		
+		Member loginUser = mService.loginMember(m); // 아이디만 가지고 찾은 회원 객체
+		
+		// loginUser -> 모든 컬럼에 대한 값 + 비밀번호(암호문)
+		if(loginUser != null && bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) { // 로그인 성공
+			
+			session.setAttribute("loginUser", loginUser);
+			session.setAttribute("alertMsg", loginUser.getUserName() + "님 환영합니다.");
+			return "redirect:/";
+			
+		}else {	// 로그인 실패
+			model.addAttribute("errorMsg", "로그인 실패");
+			return "common/errorPage";
+		}
+		
+	}
+	
 	//로그아웃
 	@RequestMapping("logout.me")
 	public String logoutMember(HttpSession session) {
@@ -215,27 +247,83 @@ public class MemberController {
 	}
 	//회원가입
 	@RequestMapping("enrollForm.me")
-	public String enrollFrom() {
+	public String enrollForm() {
 		return "member/memberEnrollForm";
+	
 		
 		// WEB-INF/Views/member/memberEnrollForm.jsp
 	}
 	// 요청처리
 	@RequestMapping("insert.me")
-	public void insertMember(Member m) {
+	public String insertMember(Member m, HttpSession session, Model model) {
 		
-		System.out.println(m);
+		//System.out.println(m);
 		
 		/*
 		 *  1. 한글 부분이 깨짐.
 		 *     post방식 요청은 인코딩 해야함.
-		 *     -> 스프링에서 제공하고 있는 인코딩 필터를 추가하면 끝. -> web.xml에 인코딩 추가.
+		 *     해결 : -> 스프링에서 제공하고 있는 인코딩 필터를 추가하면 끝. -> web.xml에 인코딩 추가.
+		 *     
+		 *  2. 만약에 나이를 입력하지 않고 넘어오게 되면 "" 빈 문자열이 넘어오기 때문에
+		 *  	int 필드인 age에 담으려고 할때  파시함
+		 *  	근데 "" -> 파싱 -> NumberFormatException 발생!
+		 *  	해결 : -> int형 -> String형 변환
+		 *  
+		 *  3. 비밀번호가 사용자가 입력한 그대로의 평문!
+		 *  	해결 = 암호화 작업을 거쳐서 DB에 저장
+		 *  		
+		 *  		bcrypt방식(솔팅기법)	-> BCryptPasswordEncoder
+		 *  		평문 + salt(랜덤값)	--> 암호문
+		 *  		따라서 똑같은 평문을 입력하여도 매번 다른 암호문이 나온다.
+		 *  
 		 *  
 		 */
 		
+		System.out.println("암호화 전(평문) : " + m.getUserPwd());
+		
+		//암호화 작업(암호문 만들기)
+		String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
+		System.out.println("암호화 후:" + encPwd);
+		
+		m.setUserPwd(encPwd); // setter를 통해 암호문 담기 
+		
+		int result = mService.insertMember(m); 
+		if(result>0) { //성공 => 메인 url요청
+			session.setAttribute("alertMsg", "성공적으로 회원가입되었습니다!");
+			return "redirect:/"; 
+		}else {
+			model.addAttribute("errorMsg","회원가입 실패");
+			return "common/errorPage"; 
+		}
+
 	}
 	
+	@RequestMapping("myPage.me")
+	public String myPage() {
+		return "member/myPage";
+	}
 	
+	@RequestMapping("update.me")
+	public String updateMember(Member m, HttpSession session, Model model) {
+		
+		int result = mService.updateMember(m);
+		
+		if(result >0 ) {	// 성공 -> 세션에 담긴 member객체 바꾸기 ->마이페이지 재요청
+			
+			session.setAttribute("loginUser", mService.loginMember(m));
+			session.setAttribute("alertMsg", "성공적으로 정보 변경 되었습니다.");
+			
+			return "redirect:myPage.me";
+			
+		}else {	// 실패 -> 에러문구 담아서 에러포워딩
+			
+			model.addAttribute("errorMsg", "정보 변경 실패");
+			return "common/errorPage";
+			
+		}
+		
+		
+	}
 	
 	
 	

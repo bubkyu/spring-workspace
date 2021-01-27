@@ -14,8 +14,8 @@
 	 -->
 	 <!-- 1. 데이터 소스 등록 먼저 -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
 		<property name="username" value="spring" />	<!-- DB 접속아이디 -->
 		<property name="password" value="spring" />	<!-- DB 접속비밀번호 -->
 	</bean>
@@ -39,9 +39,9 @@
 	 	sqlSessionFactory.setDataSource(dataSource);
 	  -->
 	  
-	  <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
-	  	<constructor-arg ref="sqlSessionFactory" />
-	  </bean>
+	 <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory"/>
+	</bean>
 	  <!-- SqlSessionTemplate sqlSession = new SqlSessionTemplate(sqlSessionFactory); -->
 	
 		<!-- 
