@@ -49,7 +49,12 @@
 			property 태그를 통해 한다면 -> setter 주입
 			constructor-arg 태그를 통해 한다면 -> 생성자 주입
 		 -->
-
+		
+		<!--  파일업로드시 빈으로 등록되어있어야됨 --> 
+	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
+		<property name="maxUploadSize" value="100000000" />
+		<property name="maxInMemorySize" value="100000000" />	<!--  -->
+	</bean>
 	
 		
 </beans>
