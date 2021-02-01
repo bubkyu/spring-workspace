@@ -53,14 +53,14 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public int updateBoard(Board b) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = bDao.updateBoard(sqlSession, b);
+		return result;
 	}
 
 	@Override
 	public int deleteBoard(int bno) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return bDao.deleteBoard(sqlSession, bno);
 	}
 
 	@Override

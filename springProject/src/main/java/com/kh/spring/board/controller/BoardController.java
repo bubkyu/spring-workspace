@@ -112,7 +112,68 @@ public class BoardController {
 		
 	}
 	
+	@RequestMapping("delete.bo")
+	public String deleteBoard(int bno, String fileName,HttpSession session,Model model) {
+		
+		int result = bService.deleteBoard(bno); 
+		
+		if(result>0) {
+			
+			// 기존의 첨부파일이 있었을 경우 => 서버에서 파일 삭제
+			if(!fileName.equals("")) {
+				
+				//삭제할 파일의 물리적인 경로 
+				String removeFilePath = session.getServletContext().getRealPath(fileName);
+				new File(removeFilePath).delete(); 
+			}
+			
+			session.setAttribute("alertMsg","삭제 성공 했습니다.");
+			return "redirect:list.bo";
+		}else {
+			model.addAttribute("errorMsg","삭제 실패 하셨습니다.");
+			return "common/errorPage"; 
+		}
+		
+	}
 	
+	@RequestMapping("updateForm.bo")
+	public String updateForm(int bno, Model model) {
+		
+		Board b = bService.selectBoard(bno);
+		model.addAttribute("b", b);
+		
+		return "board/boardUpdateForm";
+		
+	}
+	
+	@RequestMapping("update.bo")
+	public String updateBoard(Board b, MultipartFile reupfile,HttpSession session, Model model) {
+		//System.out.println(b.getBoardNo());
+		
+		//새로 넘어온 첨부파일이 있을 경우
+		if(!reupfile.getOriginalFilename().contentEquals("")) {
+			
+			//기존의 첨부파일이 있었을 경우 => 서버에 업로드 된 기존 첨부파일 지울라고
+			if(b.getOriginName() != null) {
+				String removeFilePath = session.getServletContext().getRealPath(b.getChangeName());
+				new File(removeFilePath).delete(); 
+			}
+			//그리고 새로 넘어온 파일 서버에 업로드 시켜야됨 --> 위에 만들어 놓은 saveFile메소드 호출(업로드시키고자하는 file, session); 
+			String changeName = saveFile(reupfile, session);
+			b.setOriginName(reupfile.getOriginalFilename());
+			b.setChangeName("resources/uploadFiles/"+ changeName);
+			
+		}
+		int result = bService.updateBoard(b);
+		
+		if(result>0) {//성공
+			session.setAttribute("alertMsg", "수정 성공했습니다");
+			return "redirect:detail.bo?bno=" + b.getBoardNo();
+		}else { //실패
+			model.addAttribute("errorMsg","수정 실패했습니다.");
+			return "common/errorPage";
+		}
+	}
 	
 	
 	

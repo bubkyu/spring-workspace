@@ -82,8 +82,30 @@
 	where board_no = #{bno}
 	</select>
 	
+	<!-- 게시판 삭제 -->
+	<update id="deleteBoard" parameterType="_int">
+		update
+        board
+     	set status='N'
+  		where board_no = #{bno}
+	</update>
 	
+	<!-- 게시판 수정 -->
+	<update id="updateBoard" parameterType="Board">
+		update
+        board
+   		set board_title = #{boardTitle}
+    	 , board_content = #{boardContent}
+     	 , origin_name = #{originName}
+    	 , change_name = #{changeName}
+		where board_no = #{boardNo}
+	</update>
 	
  
  
 </mapper>
+
+
+
+
+

@@ -60,10 +60,26 @@
 			<c:if test="${loginUser.userId eq b.boardWriter }">
             	<div align="center">
                 	<!-- 수정하기, 삭제하기 버튼은 이글이 본인글일 경우만 보여져야됨 -->
-                	<a class="btn btn-primary" href="">수정하기</a>
-                	<a class="btn btn-danger" href="">삭제하기</a>
+                	<a class="btn btn-primary" onclick="postSubmit(1);">수정하기</a>
+                	<a class="btn btn-danger" onclick="postSubmit(2);">삭제하기</a>
             	</div><br><br>
             </c:if>
+            
+            <form action="" method="post" id="postForm">
+            	<input type="hidden" name="bno" value="${b.boardNo }">
+            	<input type="hidden" name="fileName" value="${b.changeName }">
+            </form>
+            
+            <script>
+            function postSubmit(num){
+        		if(num == 1){ // 수정하기 버튼 클릭시
+        			$("#postForm").attr("action","updateForm.bo").submit(); 
+        		}else { // 삭제하기 버튼 클릭시
+        			$("#postForm").attr("action","delete.bo").submit(); 
+        		}
+        		
+        	}
+            </script>
 
             <!-- 댓글 기능은 나중에 ajax 배우고 접목시킬예정! 우선은 화면구현만 해놓음 -->
             <table id="replyArea" class="table" align="center">
