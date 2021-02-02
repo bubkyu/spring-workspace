@@ -82,6 +82,7 @@
 		     )
 	</insert>
  	
+ 	
  	<update id="updateMember" parameterType="Member">
 		update
 		       member
@@ -95,6 +96,7 @@
 		 where user_id = #{userId}
 	</update>
 	
+	<!-- 아이디 삭제 -->
 	<update id="deleteMember" parameterType="string">
 		update
 	   		 member
@@ -102,7 +104,16 @@
 	 		 , modify_date = sysdate
 			where user_id = #{userId}
 	</update>
+	
+	
+	<!-- 아이디중복체크 -->
  	
+ 	<select id="idCheck" parameterType="string" resultType="_int">
+ 		select 
+ 				count(*)
+ 			from member
+ 			where user_id=#{userId}
+ 	</select>
  	
 </mapper>
 

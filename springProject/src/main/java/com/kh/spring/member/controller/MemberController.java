@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.spring.member.model.service.MemberService;
@@ -344,6 +345,23 @@ public class MemberController {
 			session.setAttribute("alertMsg", "비밀번호가 틀렸습니다.");
 			return "redirect:myPage.me";
 		}
+	}
+	
+	// 아이디 중복체크
+	@ResponseBody
+	@RequestMapping("idCheck.me")
+	public String idCheck(String userId) {
+		//ajax요청
+		
+		int count = mService.idCheck(userId);
+		
+		if(count > 0) {	//이미 존재 -> 사용불가능-> "fail"
+			return "fail";
+			
+		}else {	// 존재안함 -> 사용가능 -> "success"
+			return "success";
+		}
+		
 	}
 	
 	
