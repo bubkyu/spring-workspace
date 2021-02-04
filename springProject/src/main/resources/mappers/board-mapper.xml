@@ -13,6 +13,14 @@
 		<result column="board_content" property="boardContent" />
 	</resultMap>
 	
+	<resultMap id="replyResultSet" type="Reply">
+		<id column = "reply_no" property="replyNo" />
+		<result column="reply_writer" property="replyWriter" />
+		<result column="reply_content" property="replyContent" />
+		<result column="create_date" property="createDate" />
+												
+	</resultMap>
+	
  <!-- 1_1 현재 유효한 게시글 총 갯수 조회 -->
  	<select id="selectListCount" resultType="_int">
 		select
@@ -100,6 +108,39 @@
     	 , change_name = #{changeName}
 		where board_no = #{boardNo}
 	</update>
+	
+	<select id="selectReplyList" parameterType="_int" resultMap = "replyResultSet">
+			select
+			    reply_no
+			  , reply_writer
+			  , reply_content
+			  , to_char(create_date, 'YYYY-MM-DD') create_date
+			  from reply
+			  where status='Y'
+			    and ref_bno=#{bno}
+			  order
+		    by reply_no desc
+	</select>
+	
+	<select id="insertReply" parameterType="Reply">
+		insert
+   		 into reply
+	    (
+	        reply_no
+	      , reply_content
+	      , ref_bno
+	      , reply_writer
+	      
+	    )
+	    values
+	    (
+	        seq_rno.nextval
+	      , #{replyContent}
+	      , #{refBoardNo}
+	      , #{replyWriter}
+	    )
+			
+	</select>
 	
  
  

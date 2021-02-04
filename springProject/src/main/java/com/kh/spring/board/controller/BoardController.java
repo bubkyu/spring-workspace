@@ -1,6 +1,7 @@
 package com.kh.spring.board.controller;
 
 import java.io.File;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,13 +14,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
 import com.kh.spring.board.model.service.BoardService;
 import com.kh.spring.board.model.vo.Board;
+import com.kh.spring.board.model.vo.Reply;
 import com.kh.spring.common.model.vo.PageInfo;
 import com.kh.spring.common.template.Pagination;
+
 @Controller
 public class BoardController {
 	
@@ -202,8 +207,36 @@ public class BoardController {
 		
 		return changeName; 
 	}//e.saveFile
+	
+	@ResponseBody
+	@RequestMapping(value="rlist.bo", produces="application/json; cahrset=utf-8")
+	public String selectReplyList(int bno) {
+		// ajax요청
+		ArrayList<Reply> list = bService.selectReplyList(bno);
+		
+		return new Gson().toJson(list);
+	}
+	
+	@ResponseBody
+	@RequestMapping("rinsert.bo")
+	public String insertReply(Reply r) {
+		
+		// ajax 요청
+		int result = bService.insertReply(r);
+		
+		if(result > 0) {
+			return "success";
+		}else {
+			return "fail";
+		}
+		
+	}
 
 }
+
+
+
+
 
 
 

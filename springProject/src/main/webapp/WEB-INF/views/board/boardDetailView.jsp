@@ -81,42 +81,121 @@
         	}
             </script>
 
+
+
+
             <!-- 댓글 기능은 나중에 ajax 배우고 접목시킬예정! 우선은 화면구현만 해놓음 -->
             <table id="replyArea" class="table" align="center">
                 <thead>
                     <tr>
+                        <c:choose>
+                        <c:when test="${ empty loginUser }">
+                        
+                        <!-- 로그인 전 상태 -->
                         <th colspan="2">
-                            <textarea class="form-control" name="" id="content" cols="55" rows="2" style="resize:none; width:100%"></textarea>
+                            <textarea class="form-control"  cols="55" rows="2" style="resize:none; width:100%" readonly>로그인한 사용자만 이용가능한 서비스입니다. 로그인 후 이용해주세요.</textarea>
                         </th>
-                        <th style="vertical-align: middle"><button class="btn btn-secondary">등록하기</button></th>
+                        <th style="vertical-align: middle"><button class="btn btn-secondary" disabled>등록하기</button></th>
+                        </c:when>
+	                        
+	                        <c:otherwise>
+	                        
+	                        <!-- 로그인 후 상태 -->
+	                        <th colspan="2">
+	                            <textarea class="form-control" id="content" cols="55" rows="2" style="resize:none; width:100%"></textarea>
+	                        		</th>
+	                        	<th style="vertical-align: middle"><button class="btn btn-secondary" onclick="addReply();">등록하기</button></th>
+	                        </c:otherwise>
+                        </c:choose>
                     </tr>
                     <tr>
-                       <td colspan="3">댓글 (<span id="rcount">3</span>) </td> 
+                       <td colspan="3">댓글 (<span id="rcount"></span>) </td> 
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th>user02</th>
-                        <td>댓글입니다.너무웃기다앙</td>
-                        <td>2020-04-10</td>
-                    </tr>
-                    <tr>
-                        <th>user01</th>
-                        <td>많이봐주세용</td>
-                        <td>2020-04-08</td>
-                    </tr>
-                    <tr>
-                        <th>admin</th>
-                        <td>댓글입니다ㅋㅋㅋ</td>
-                        <td>2020-04-02</td>
-                    </tr>
+                    
                 </tbody>
             </table>
         </div>
         <br><br>
     </div>
+    
+    <script>
+    	$(function(){
+    		selectReplyList();
+    	})
+    	
+    	// 해당 이게시글에 댓글 작성용 ajax
+    	function addReply(){
+    		
+    		if($("#content").val().trim().length != 0){	// 공박이 아닐경우(trim 공백)기술되어있음. -> ajax 요청
+    			
+    			$.ajax({
+    				url:"rinsert.bo",
+    				data:{
+    					replyContent:$("#content").val(),
+    					refBoardNo:${b.boardNo},
+    					replyWriter:"${loginUser.userId}"
+    				},
+    				success:function(result){
+    					
+    					if(result == 'success'){
+    						// textarea에 남아있는 흔적 없애기.
+    						$("#content").val("");
+    						// 갱신된 리스트 조회 ajax 요청
+    						selectReplyList();
+    					}
+    					
+    				},error:function(){
+    					console.log("댓글 작성용 ajax 통신 실패");
+    				}
+    			})
+    			
+    		}else{	// 기술되어있지 않을 경우 -> 댓글먼저 작성해주세요.
+    			alertify.alert("댓글을 먼저 작성해주세요!");
+    		}
+    		
+    		
+    	}
+    
+    	//해당 이 게시글에 딸려있는 댓글 리스트 조회용 ajax
+    	function selectReplyList(){
+    		$.ajax({
+    			url:"rlist.bo",
+    			data:{bno:${b.boardNo}},
+    			success:function(list){
+    				
+    				$("#rcount").text(list.length);
+    				
+    				var value="";
+    				$.each(list, function(i, obj){
+    					value += '<tr>' +
+			                        '<th>' + obj.replyWriter + '</th>' +
+			                        '<td>' + obj.replyContent + '</td>' +
+			                        '<td>' + obj.createDate + '</td>' +
+			                    '</tr>';
+    				})
+    				
+    				$("#replyArea tbody").html(value);
+    	
+    			},error:function(){
+    				console.log("댓글 리스트 조회용 ajax 통신 실패");
+    			}
+    		})
+    	}
+    
+    </script>
+    
 
     <!-- 이쪽에 푸터바 포함할꺼임 -->
     <jsp:include page="../common/footer.jsp"/>
 </body>
 </html>
+
+
+
+
+
+
+
+

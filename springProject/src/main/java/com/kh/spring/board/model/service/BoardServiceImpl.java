@@ -65,14 +65,14 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public ArrayList<Reply> selectReplyList(int bno) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return bDao.selectReplyList(sqlSession, bno);
 	}
 
 	@Override
 	public int insertReply(Reply r) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return bDao.insertReply(sqlSession, r);
 	}
 
 }
