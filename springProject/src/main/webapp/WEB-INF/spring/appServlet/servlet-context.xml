@@ -47,7 +47,18 @@
 	 		</beans:property>
 	 	</beans:bean>		
 	  -->
+	  
+	  <!-- 위의 방식 xml방식이라고 한다면 후에 나온게 어노테이션 방식 -->
 	 
+	 <interceptors>
+	 	<interceptor>
+	 		<mapping path="/myPage.me" />
+	 		<mapping path="/list.bo" />
+	 		<mapping path="/detail.bo" />
+	 		<mapping path="/enrollForm.bo" />
+	 		<beans:bean class="com.kh.spring.common.interceptor.LoginInterceptor" id="LoginIntercept" />
+	 	</interceptor>
+	 </interceptors>
 	
 	
 </beans:beans>

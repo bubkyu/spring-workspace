@@ -128,7 +128,7 @@
     	// 해당 이게시글에 댓글 작성용 ajax
     	function addReply(){
     		
-    		if($("#content").val().trim().length != 0){	// 공박이 아닐경우(trim 공백)기술되어있음. -> ajax 요청
+    		if($("#content").val().trim().length != 0){	// 공백이 아닐경우(trim 공백)기술되어있음. -> ajax 요청
     			
     			$.ajax({
     				url:"rinsert.bo",
